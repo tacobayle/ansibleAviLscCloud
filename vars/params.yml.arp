@@ -1,0 +1,93 @@
+---
+systemconfiguration:
+  global_tenant_config:
+    se_in_provider_context: true
+    tenant_access_to_provider_se: true
+    tenant_vrf: false
+    # tenant_vrf: true
+
+
+cloud:
+  tenant_ref: admin
+  se:
+    - addr: 192.168.17.152
+      cpu: 1
+      mem: 1
+      dpdk: no
+      se_inband_mgmt: False
+      se_group_ref: Default-Group
+    - addr: 192.168.17.153
+      cpu: 1
+      mem: 1
+      dpdk: no
+      se_inband_mgmt: False
+      se_group_ref: Default-Group
+
+
+serviceenginegroup:
+  - name: Default-Group
+    # ha_mode: HA_MODE_SHARED # N+M
+    ha_mode: HA_MODE_SHARED_PAIR # Active-Active
+    min_scaleout_per_vs: 2 # required for acitive active
+
+cloudconnectoruser:
+  name: avi
+  private_key: /home/avi/ssh/id_rsa
+
+avi_healthmonitor:
+  - name: hm1
+    receive_timeout: 4
+    failed_checks: 3
+    send_interval: 10
+    successful_checks: 3
+    type: HEALTH_MONITOR_HTTP
+    http_request: "HEAD / HTTP/1.0"
+    http_response_code:
+      - HTTP_2XX
+      - HTTP_3XX
+      - HTTP_5XX
+
+avi_pool:
+  - name: pool1
+    lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
+    health_monitor_refs: hm1
+    servers:
+      - ipaddr: 172.16.1.253
+        iptype: 'V4'
+      - ipaddr: 172.16.1.254
+        iptype: 'V4'
+
+virtualservice:
+  - name: vs1
+    port: 80
+    pool_ref: pool1
+    vip: 2.1.1.50
+    enable_rhi: false
+
+vrfcontext:
+  - name: global
+    bgp_profile:
+      peers:
+      - keepalive_interval: 1
+        subnet:
+          mask: 8
+          ip_addr:
+            type: V4
+            addr: 2.0.0.0
+        remote_as: 200
+        ebgp_multihop: 0
+        bfd: false
+        advertise_snat_ip: true
+        connect_timer: 10
+        peer_ip:
+          type: V4
+          addr: 2.1.1.20
+        advertise_vip: true
+        advertisement_interval: 5
+        shutdown: false
+        hold_time: 3
+      local_as: 100
+      ibgp: false
+      send_community: true
+      shutdown: false
+      hold_time: 180

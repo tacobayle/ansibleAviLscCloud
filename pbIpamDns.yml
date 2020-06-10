@@ -1,0 +1,75 @@
+---
+- hosts: controller
+  connection: local
+
+  vars:
+    listNetworkUuid: []
+
+  vars_files:
+    - "vars/creds.json"
+    - "vars/params.yml"
+
+  roles:
+    - role: "avinetworks.avisdk"
+
+  tasks:
+
+    - name: Create Avi DNS provider setting
+      avi_ipamdnsproviderprofile:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        internal_profile:
+          dns_service_domain:
+          - domain_name: "{{ dns.domain.name }}"
+            num_dns_ip: 1
+            pass_through: true
+            record_ttl: 100
+          ttl: 300
+        name: "{{ dns.name }}"
+        type: IPAMDNS_TYPE_INTERNAL_DNS
+      when: dns is defined
+
+    - name: Create Networks
+      avi_network:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        name: "{{ network.name }}"
+        configured_subnets: "{{ network.subnet }}"
+        dhcp_enabled: "{{ network.dhcp_enabled }}"
+      when: network is defined
+
+
+    - name: get Networks to retrieve Uuid
+      avi_api_session:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        http_method: get
+        timeout: 300
+        path: network
+      register: networkUuid
+      when: network is defined
+
+    - name: Append Network uuid to the list
+      set_fact:
+        listNetworkUuid: "{{ listNetworkUuid }} + [ '{{ item.uuid }}' ]"
+      loop: "{{ networkUuid.obj.results }}"
+      loop_control:
+       label: "{{ item.uuid }}"
+      when: network is defined
+
+
+    # - debug:
+    #     msg: "/api/network/{{ listNetworkUuid.0 }}"
+
+    - name: Create Avi IPAM
+      avi_ipamdnsproviderprofile:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        internal_profile:
+          usable_network_refs:
+            - "/api/network/{{ listNetworkUuid.0 }}"
+        name: "{{ ipam.name }}"
+        type: IPAMDNS_TYPE_INTERNAL
+      when: network is defined
+
+# this works only if one subnet is configured (network is not a list)

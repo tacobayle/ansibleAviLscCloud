@@ -1,0 +1,15 @@
+---
+all:
+  children:
+    se:
+      hosts:
+        192.168.139.131:
+        192.168.139.133:
+    controller:
+      hosts:
+        192.168.139.130:
+
+
+  vars:
+    ansible_user: avi
+    ansible_ssh_private_key_file: "/home/avi/.ssh/id_rsa.local"

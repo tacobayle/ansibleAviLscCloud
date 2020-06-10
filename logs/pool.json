@@ -1,0 +1,133 @@
+{
+  "count": 2,
+  "results": [
+    {
+      "lb_algorithm": "LB_ALGORITHM_ROUND_ROBIN",
+      "use_service_port": false,
+      "rewrite_host_header_to_server_name": false,
+      "host_check_enabled": false,
+      "enabled": true,
+      "rewrite_host_header_to_sni": false,
+      "delete_server_on_dns_refresh": true,
+      "capacity_estimation": false,
+      "servers": [
+        {
+          "ratio": 1,
+          "ip": {
+            "type": "V4",
+            "addr": "172.16.3.253"
+          },
+          "hostname": "172.16.3.253",
+          "enabled": true,
+          "verify_network": false,
+          "static": false,
+          "resolve_server_by_dns": false,
+          "rewrite_host_header": false
+        },
+        {
+          "ratio": 1,
+          "ip": {
+            "type": "V4",
+            "addr": "172.16.3.254"
+          },
+          "hostname": "172.16.3.254",
+          "enabled": true,
+          "verify_network": false,
+          "static": false,
+          "resolve_server_by_dns": false,
+          "prst_hdr_val": "",
+          "rewrite_host_header": false
+        }
+      ],
+      "fewest_tasks_feedback_delay": 10,
+      "capacity_estimation_ttfb_thresh": 0,
+      "lookup_server_by_name": false,
+      "lb_algorithm_hash": "LB_ALGORITHM_CONSISTENT_HASH_SOURCE_IP_ADDRESS",
+      "analytics_profile_ref": "https://192.168.142.135/api/analyticsprofile/analyticsprofile-d6d81c74-edeb-485e-ac3a-30dffff35036",
+      "_last_modified": "1591734645358672",
+      "cloud_ref": "https://192.168.142.135/api/cloud/cloud-141d1115-57ea-4d93-b96a-b941c69773a6",
+      "lb_algorithm_core_nonaffinity": 2,
+      "vrf_ref": "https://192.168.142.135/api/vrfcontext/vrfcontext-eb478938-721a-40e7-a1b9-7ca9c8b892b4",
+      "inline_health_monitor": true,
+      "default_server_port": 80,
+      "request_queue_depth": 128,
+      "graceful_disable_timeout": 1,
+      "sni_enabled": true,
+      "server_timeout": 0,
+      "request_queue_enabled": false,
+      "name": "pool1",
+      "max_concurrent_connections_per_server": 0,
+      "url": "https://192.168.142.135/api/pool/pool-50559abf-c252-4899-8520-48466c4fbe56",
+      "tenant_ref": "https://192.168.142.135/api/tenant/admin",
+      "uuid": "pool-50559abf-c252-4899-8520-48466c4fbe56",
+      "health_monitor_refs": [
+        "https://192.168.142.135/api/healthmonitor/healthmonitor-97e1ef91-930e-4cb4-bc87-86df8ff4bf15"
+      ],
+      "connection_ramp_duration": 10
+    },
+    {
+      "lb_algorithm": "LB_ALGORITHM_ROUND_ROBIN",
+      "use_service_port": false,
+      "rewrite_host_header_to_server_name": false,
+      "host_check_enabled": false,
+      "enabled": true,
+      "rewrite_host_header_to_sni": false,
+      "delete_server_on_dns_refresh": true,
+      "capacity_estimation": false,
+      "servers": [
+        {
+          "ratio": 1,
+          "ip": {
+            "type": "V4",
+            "addr": "172.16.3.251"
+          },
+          "hostname": "172.16.3.251",
+          "enabled": true,
+          "verify_network": false,
+          "static": false,
+          "resolve_server_by_dns": false,
+          "rewrite_host_header": false
+        },
+        {
+          "ratio": 1,
+          "ip": {
+            "type": "V4",
+            "addr": "172.16.3.252"
+          },
+          "hostname": "172.16.3.252",
+          "enabled": true,
+          "verify_network": false,
+          "static": false,
+          "resolve_server_by_dns": false,
+          "prst_hdr_val": "",
+          "rewrite_host_header": false
+        }
+      ],
+      "fewest_tasks_feedback_delay": 10,
+      "capacity_estimation_ttfb_thresh": 0,
+      "lookup_server_by_name": false,
+      "lb_algorithm_hash": "LB_ALGORITHM_CONSISTENT_HASH_SOURCE_IP_ADDRESS",
+      "analytics_profile_ref": "https://192.168.142.135/api/analyticsprofile/analyticsprofile-d6d81c74-edeb-485e-ac3a-30dffff35036",
+      "_last_modified": "1591734627732397",
+      "cloud_ref": "https://192.168.142.135/api/cloud/cloud-141d1115-57ea-4d93-b96a-b941c69773a6",
+      "lb_algorithm_core_nonaffinity": 2,
+      "vrf_ref": "https://192.168.142.135/api/vrfcontext/vrfcontext-eb478938-721a-40e7-a1b9-7ca9c8b892b4",
+      "inline_health_monitor": true,
+      "default_server_port": 80,
+      "request_queue_depth": 128,
+      "graceful_disable_timeout": 1,
+      "sni_enabled": true,
+      "server_timeout": 0,
+      "request_queue_enabled": false,
+      "name": "pool2",
+      "max_concurrent_connections_per_server": 0,
+      "url": "https://192.168.142.135/api/pool/pool-92d5c41a-3a33-43fe-a374-d40dbf297cbf",
+      "tenant_ref": "https://192.168.142.135/api/tenant/admin",
+      "uuid": "pool-92d5c41a-3a33-43fe-a374-d40dbf297cbf",
+      "health_monitor_refs": [
+        "https://192.168.142.135/api/healthmonitor/healthmonitor-97e1ef91-930e-4cb4-bc87-86df8ff4bf15"
+      ],
+      "connection_ramp_duration": 10
+    }
+  ]
+}

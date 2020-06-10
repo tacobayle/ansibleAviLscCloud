@@ -1,0 +1,21 @@
+---
+- hosts: se
+  become: true
+  gather_facts: no
+  become_user: root
+  become_method: sudo
+
+  vars_files:
+    - "vars/creds.json"
+    - "vars/params.yml"
+
+  tasks:
+  - name: copy keys for avi controller
+    copy:
+      src: "{{ cloudconnectoruser.private_key }}"
+      dest: .ssh/{{ cloudconnectoruser.private_key | basename }}
+
+  - name: sudo curl command for the controller
+    become: true
+    shell: |
+      curl -ks https://"{{ avi_credentials.controller }}":443/api/linux_host_install?username="{{ cloudconnectoruser.name }}" | sudo bash

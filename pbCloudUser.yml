@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  connection: local
+
+  vars_files:
+    - "vars/creds.json"
+    - "vars/params.yml"
+
+  roles:
+    - role: "avinetworks.avisdk"
+
+  tasks:
+
+    - name: Create a Cloud connector user
+      avi_cloudconnectoruser:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        private_key: "{{ lookup('file', '{{ cloudconnectoruser.private_key }}') }}"
+        name: "{{ cloudconnectoruser.name }}"
+      ignore_errors: no

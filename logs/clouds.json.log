@@ -1,0 +1,103 @@
+{
+  "count": 2,
+  "results": [
+    {
+      "uuid": "cloud-de22a6dc-3f4f-49e2-b453-9748e3eedec0",
+      "dhcp_enabled": false,
+      "vtype": "CLOUD_NONE",
+      "license_tier": "ENTERPRISE_18",
+      "_last_modified": "1590760711922190",
+      "url": "https://192.168.36.137/api/cloud/cloud-de22a6dc-3f4f-49e2-b453-9748e3eedec0",
+      "ip6_autocfg_enabled": false,
+      "tenant_ref": "https://192.168.36.137/api/tenant/admin",
+      "dns_resolution_on_se": false,
+      "enable_vip_static_routes": false,
+      "prefer_static_routes": false,
+      "autoscale_polling_interval": 60,
+      "license_type": "LIC_CORES",
+      "mtu": 1500,
+      "apic_mode": false,
+      "state_based_dns_registration": true,
+      "name": "Default-Cloud"
+    },
+    {
+      "uuid": "cloud-f21ca653-8b52-485a-b5f4-16b37ed98d85",
+      "vtype": "CLOUD_LINUXSERVER",
+      "ipam_provider_ref": "https://192.168.36.137/api/ipamdnsproviderprofile/ipamdnsproviderprofile-96dd6802-586a-41fe-9686-7e72b25a3e38",
+      "_last_modified": "1591603211330753",
+      "url": "https://192.168.36.137/api/cloud/cloud-f21ca653-8b52-485a-b5f4-16b37ed98d85",
+      "dns_provider_ref": "https://192.168.36.137/api/ipamdnsproviderprofile/ipamdnsproviderprofile-160be8b8-5c7f-42ca-9569-9273302250e8",
+      "ip6_autocfg_enabled": false,
+      "tenant_ref": "https://192.168.36.137/api/tenant/admin",
+      "dns_resolution_on_se": false,
+      "enable_vip_static_routes": false,
+      "linuxserver_configuration": {
+        "se_sys_disk_size_GB": 10,
+        "se_log_disk_size_GB": 5,
+        "se_inband_mgmt": false,
+        "hosts": [
+          {
+            "host_attr": [
+              {
+                "attr_key": "CPU",
+                "attr_val": "1"
+              },
+              {
+                "attr_key": "MEMORY",
+                "attr_val": "1"
+              },
+              {
+                "attr_key": "DPDK",
+                "attr_val": "No"
+              },
+              {
+                "attr_key": "SE_INBAND_MGMT",
+                "attr_val": "False"
+              }
+            ],
+            "se_group_ref": "https://192.168.36.137/api/serviceenginegroup/serviceenginegroup-0a455d43-df35-42ee-bf22-d0843b8c4a06",
+            "host_ip": {
+              "type": "V4",
+              "addr": "192.168.36.138"
+            }
+          },
+          {
+            "host_attr": [
+              {
+                "attr_key": "CPU",
+                "attr_val": "1"
+              },
+              {
+                "attr_key": "MEMORY",
+                "attr_val": "1"
+              },
+              {
+                "attr_key": "DPDK",
+                "attr_val": "No"
+              },
+              {
+                "attr_key": "SE_INBAND_MGMT",
+                "attr_val": "False"
+              }
+            ],
+            "se_group_ref": "https://192.168.36.137/api/serviceenginegroup/serviceenginegroup-0a455d43-df35-42ee-bf22-d0843b8c4a06",
+            "host_ip": {
+              "type": "V4",
+              "addr": "192.168.36.139"
+            }
+          }
+        ],
+        "ssh_user_ref": "https://192.168.36.137/api/cloudconnectoruser/cloudconnectoruser-9710cf51-4fdf-4ad8-ba05-5e439851b620"
+      },
+      "state_based_dns_registration": true,
+      "prefer_static_routes": false,
+      "autoscale_polling_interval": 60,
+      "license_type": "LIC_CORES",
+      "license_tier": "ENTERPRISE_18",
+      "apic_mode": false,
+      "dhcp_enabled": false,
+      "mtu": 1500,
+      "name": "cloudLS"
+    }
+  ]
+}

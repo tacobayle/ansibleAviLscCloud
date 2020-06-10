@@ -1,0 +1,94 @@
+---
+- hosts: controller
+  connection: local
+
+  vars_files:
+    - "vars/creds.json"
+    - "vars/params.yml"
+
+  roles:
+    - role: "avinetworks.avisdk"
+
+  tasks:
+
+    - name: generate List of SE
+      command: "python3 python/generateListSe.py {{ inventory_file }} vars/params.yml"
+      delegate_to: 127.0.0.1
+      register: generateListSe
+
+    - set_fact:
+        ListSe: "{{ generateListSe.stdout | from_json }}"
+
+    - name: Debug
+      debug:
+        msg: "{{ ListSe }}"
+      tags:
+        - debug
+
+    # - name: Modify Default Cloud by Linux Server Cloud
+    #   avi_cloud:
+    #     # avi_api_update_method: patch
+    #     # avi_api_patch_op: add
+    #     avi_credentials: "{{ avi_credentials }}"
+    #     api_version: "{{ avi_credentials.api_version }}"
+    #     vtype: CLOUD_LINUXSERVER
+    #     license_tier: ENTERPRISE_18
+    #     enable_vip_static_routes: false
+    #     ip6_autocfg_enabled: false
+    #     tenant_ref: /api/tenant/?name={{ cloud.tenant_ref }}
+    #     dhcp_enabled: false
+    #     # linuxserver_configuration:
+    #     #   se_sys_disk_size_GB: 10
+    #     #   se_log_disk_size_GB: 5
+    #     #   se_inband_mgmt: false
+    #     #   hosts:
+    #     #   - host_attr:
+    #     #     - attr_key: CPU
+    #     #       attr_val: '{{ cloud.se.cpu }}'
+    #     #     - attr_key: MEMORY
+    #     #       attr_val: '{{ cloud.se.mem }}'
+    #     #     - attr_key: DPDK
+    #     #       attr_val: '{{ cloud.se.dpdk }}'
+    #     #     - attr_key: SE_INBAND_MGMT
+    #     #       attr_val: '{{ cloud.se.se_inband_mgmt }}'
+    #     #     se_group_ref: /api/serviceenginegroup/?name={{ cloud.se.se_group_ref }}
+    #     #     host_ip:
+    #     #       type: V4
+    #     #       addr: '{{ item }}'
+    #     #   ssh_user_ref: /api/cloudconnectoruser/?name={{ cloudconnectoruser.name }}
+    #     prefer_static_routes: false
+    #     license_type: LIC_CORES
+    #     mtu: 1500
+    #     apic_mode: false
+    #     state_based_dns_registration: true
+    #     dns_provider_ref: /api/ipamdnsproviderprofile/?name={{ cloud.dns_provider_ref }}
+    #     ipam_provider_ref: /api/ipamdnsproviderprofile/?name={{ cloud.ipam_provider_ref }}
+    #     name: cloudLS
+    #   # loop: "{{ ListSe }}"
+
+    - name: Modify Default Cloud by Linux Server Cloud
+      avi_cloud:
+        # avi_api_update_method: patch
+        # avi_api_patch_op: add
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        vtype: CLOUD_LINUXSERVER
+        license_tier: ENTERPRISE_18
+        enable_vip_static_routes: false
+        ip6_autocfg_enabled: false
+        tenant_ref: /api/tenant/?name={{ cloud.tenant_ref }}
+        dhcp_enabled: false
+        linuxserver_configuration:
+          se_sys_disk_size_GB: 10
+          se_log_disk_size_GB: 5
+          se_inband_mgmt: false
+          hosts: '{{ ListSe }}'
+          ssh_user_ref: /api/cloudconnectoruser/?name={{ cloudconnectoruser.name }}
+        prefer_static_routes: false
+        license_type: LIC_CORES
+        mtu: 1500
+        apic_mode: false
+        state_based_dns_registration: true
+        dns_provider_ref: /api/ipamdnsproviderprofile/?name={{ cloud.dns_provider_ref }}
+        ipam_provider_ref: /api/ipamdnsproviderprofile/?name={{ cloud.ipam_provider_ref }}
+        name: Default-Cloud

@@ -1,0 +1,72 @@
+---
+cloudconnectoruser:
+  name: avi
+  private_key: /home/avi/ssh/id_rsa
+
+cloud:
+  tenant_ref: admin
+  se:
+    cpu: 1
+    mem: 1
+    dpdk: False
+    se_inband_mgmt: False
+    se_group_ref: Default-Group
+    addr: 192.168.17.153
+
+vrfcontext:
+  - name: global
+    bgp_profile:
+      peers:
+      - keepalive_interval: 1
+        subnet:
+          mask: 24
+          ip_addr:
+            type: V4
+            addr: 10.1.2.0
+        remote_as: 200
+        ebgp_multihop: 0
+        bfd: false
+        advertise_snat_ip: true
+        connect_timer: 10
+        peer_ip:
+          type: V4
+          addr: 10.1.2.1
+        advertise_vip: true
+        advertisement_interval: 5
+        shutdown: false
+        hold_time: 3
+      local_as: 100
+      ibgp: false
+      send_community: true
+      shutdown: false
+      hold_time: 180
+
+avi_healthmonitor:
+  - name: hm1
+    receive_timeout: 1
+    failed_checks: 2
+    send_interval: 1
+    successful_checks: 2
+    type: HEALTH_MONITOR_HTTP
+    http_request: "HEAD / HTTP/1.0"
+    http_response_code:
+      - HTTP_2XX
+      - HTTP_3XX
+      - HTTP_5XX
+
+avi_pool:
+  - name: pool1
+    lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
+    health_monitor_refs: hm1
+    servers:
+      - ipaddr: 172.16.3.253
+        iptype: 'V4'
+      - ipaddr: 172.16.3.254
+        iptype: 'V4'
+
+virtualservice:
+  - name: vs1
+    port: 80
+    pool_ref: pool1
+    vip: 5.5.5.5
+    enable_rhi: true

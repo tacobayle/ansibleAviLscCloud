@@ -1,0 +1,183 @@
+---
+- hosts: controller
+  connection: local
+
+  vars_files:
+    - "vars/creds.json"
+    - "vars/params.yml"
+
+  roles:
+    - role: "avinetworks.avisdk"
+
+  tasks:
+
+    - name: Create Virtualservice for DNS (based on static IP)
+      avi_virtualservice:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        avi_api_update_method: patch
+        avi_api_patch_op: add
+        name: "{{ item.name }}"
+        application_profile_ref: "/api/applicationprofile/?name={{ item.application_profile_ref | default('System-DNS') }}"
+        network_profile_ref: "/api/networkprofile/?name={{ item.network_profile_ref | default('System-UDP-Per-Pkt') }}"
+        services:
+          - port: "{{ item.port }}"
+        enable_rhi: "{{ item.enable_rhi }}"
+        vip:
+          - ip_address:
+              addr: "{{ item.vip }}"
+              type: 'V4'
+            vip_id: '1'
+        analytics_policy:
+          udf_log_throttle: 10
+          # enabled: true
+          full_client_logs:
+            duration: 0
+            throttle: 10
+            enabled: true
+          metrics_realtime_update:
+            duration: 0
+            enabled: true
+          significant_log_throttle: 10
+          client_insights: PASSIVE
+      loop: "{{ virtualservice.dns }}"
+
+
+    - name: Update system config with DNS VS
+      avi_systemconfiguration:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        dns_virtualservice_refs: "/api/virtualservice/?name={{ virtualservice.dns.0.name }}"
+
+
+    - name: Create HTTP health monitor
+      avi_healthmonitor:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        avi_api_update_method: patch
+        avi_api_patch_op: add
+        name: "{{ item.0.name }}"
+        http_monitor:
+          http_request: "{{ item.0.http_request }}"
+          http_response_code:
+            - "{{ item.1 }}"
+        receive_timeout: "{{ item.0.receive_timeout }}"
+        failed_checks: "{{ item.0.failed_checks }}"
+        send_interval: "{{ item.0.send_interval }}"
+        successful_checks: "{{ item.0.successful_checks }}"
+        type: "{{ item.0.type }}"
+      with_subelements:
+        - "{{ avi_healthmonitor }}"
+        - http_response_code
+      when: item.0.type == "HEALTH_MONITOR_HTTP"
+# nested loop needs to be used for httt_response_code
+# one task needs to be define per health monitor type
+
+    # - name: Create pool
+    #   avi_pool:
+    #     avi_credentials: "{{ avi_credentials }}"
+    #     api_version: "{{ avi_credentials.api_version }}"
+    #     avi_api_update_method: patch
+    #     avi_api_patch_op: add
+    #     name: "{{ item.0.name }}"
+    #     lb_algorithm: "{{ item.0.lb_algorithm }}"
+    #     health_monitor_refs:
+    #       - "/api/healthmonitor?name={{ item.0.health_monitor_refs }}"
+    #     servers:
+    #       - ip:
+    #            addr: "{{ item.1.ipaddr }}"
+    #            type: "{{ item.1.iptype }}"
+    #   with_subelements:
+    #     - "{{ avi_pool }}"
+    #     - servers
+
+    - name: Create pool
+      avi_pool:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        # avi_api_update_method: patch
+        # avi_api_patch_op: add
+        name: "{{ item.name }}"
+        lb_algorithm: "{{ item.lb_algorithm }}"
+        health_monitor_refs:
+          - "/api/healthmonitor?name={{ item.health_monitor_refs }}"
+        servers: "{{ item.servers }}"
+      loop: "{{ avi_pool }}"
+      tags: test
+
+    - name: Create HTTP Virtualservice (based on Dynamic IP - Ipam)
+      avi_virtualservice:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        avi_api_update_method: patch
+        avi_api_patch_op: add
+        name: "{{ item.name }}"
+        services:
+          - port: "{{ item.port }}"
+        pool_ref: "/api/pool?name={{ item.pool_ref }}"
+        enable_rhi: "{{ item.enable_rhi | default('false') }}"
+        vip:
+          - auto_allocate_ip: true
+            ipam_network_subnet:
+              network_ref: "/api/network/?name={{ item.network_ref | default(network.name) }}"
+              subnet:
+                mask: "{{ item.mask | default(network.subnet.0.prefix.mask) }}"
+                ip_addr:
+                  type: "{{ item.type | default(network.subnet.0.prefix.ip_addr.type) }}"
+                  addr: "{{ item.addr | default(network.subnet.0.prefix.ip_addr.addr) }}"
+        dns_info:
+          - fqdn: "{{ item.fqdn }}"
+        analytics_policy:
+          udf_log_throttle: 10
+          # enabled: true
+          full_client_logs:
+            duration: 0
+            throttle: 10
+            enabled: true
+          metrics_realtime_update:
+            duration: 0
+            enabled: true
+          significant_log_throttle: 10
+          client_insights: PASSIVE
+      loop: "{{ virtualservice.http }}"
+
+
+
+    - name: Create HTTPS Virtualservice (based on Dynamic IP - Ipam)
+      avi_virtualservice:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        avi_api_update_method: patch
+        avi_api_patch_op: add
+        name: "{{ item.name }}"
+        ssl_profile_ref: "/api/sslprofile/?name={{ item.ssl_profile_ref | default('System-Standard') }}"
+        ssl_key_and_certificate_refs: "/api/sslkeyandcertificate/?name={{ item.ssl_key_and_certificate_refs | default('System-Default-Cert') }}"
+        services:
+          - port: "{{ item.port }}"
+            enable_ssl: "{{ item.enable_ssl }}"
+        pool_ref: "/api/pool?name={{ item.pool_ref }}"
+        enable_rhi: "{{ item.enable_rhi | default('false') }}"
+        vip:
+          - auto_allocate_ip: true
+            ipam_network_subnet:
+              network_ref: "/api/network/?name={{ item.network_ref | default(network.name) }}"
+              subnet:
+                mask: "{{ item.mask | default(network.subnet.0.prefix.mask) }}"
+                ip_addr:
+                  type: "{{ item.type | default(network.subnet.0.prefix.ip_addr.type) }}"
+                  addr: "{{ item.addr | default(network.subnet.0.prefix.ip_addr.addr) }}"
+        dns_info:
+          - fqdn: "{{ item.fqdn }}"
+        analytics_policy:
+          udf_log_throttle: 10
+          # enabled: true
+          full_client_logs:
+            duration: 0
+            throttle: 10
+            enabled: true
+          metrics_realtime_update:
+            duration: 0
+            enabled: true
+          significant_log_throttle: 10
+          client_insights: PASSIVE
+      loop: "{{ virtualservice.https }}"
