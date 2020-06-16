@@ -141,7 +141,12 @@ virtualservice:
       network_profile_ref: System-UDP-Per-Pkt
   http:
     - name: vs2-http
-      port: 80
+      # port: 80
+      services:
+        - port: 80
+          enable_ssl: false
+        - port: 443
+          enable_ssl: true
       pool_ref: pool1
       enable_rhi: false
       network_ref: net-avi
@@ -149,11 +154,26 @@ virtualservice:
       type: V4
       addr: 10.1.2.0
       fqdn: vs2.demoavi.local
-  https:
     - name: vs3-https
-      enable_ssl: true
-      port: 443
+      # port: 80
+      services:
+        - port: 443
+          enable_ssl: true
       pool_ref: pool2
-      fqdn: vs3.demoavi.local
-      ssl_profile_ref: System-Standard
-      ssl_key_and_certificate_refs: System-Default-Cert
+      enable_rhi: false
+      network_ref: net-avi
+      mask: 24
+      type: V4
+      addr: 10.1.2.0
+      fqdn: vs2.demoavi.local
+  # https:
+  #   - name: vs3-https
+  #     services:
+  #       - port: 443
+  #         enable_ssl: true
+  #     #enable_ssl: true
+  #     #port: 443
+  #     pool_ref: pool2
+  #     fqdn: vs3.demoavi.local
+  #     ssl_profile_ref: System-Standard
+  #     ssl_key_and_certificate_refs: System-Default-Cert
