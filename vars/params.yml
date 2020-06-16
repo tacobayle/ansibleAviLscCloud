@@ -165,7 +165,7 @@ virtualservice:
       mask: 24
       type: V4
       addr: 10.1.2.0
-      fqdn: vs2.demoavi.local
+      fqdn: vs3.demoavi.local
   # https:
   #   - name: vs3-https
   #     services:
