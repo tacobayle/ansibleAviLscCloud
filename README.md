@@ -1,7 +1,7 @@
 # aviLscCloud
 
 ## Goals
-Ansible playbooks to configure Avi LSC Cloud and VS.
+Ansible playbooks to configure Avi LSC Cloud and VS. (Arp or native scaling use case)
 
 ## Prerequisites:
 1. Make sure the controller is available at the IP defined in vars/creds.json
@@ -59,4 +59,4 @@ avi@ansible:~/ansible/aviLscCloud$
 ansible-playbook -i hosts main.yml
 
 ## Improvement:
-Handle a BGP use case
+BGP branch allows a BGP use case demo
