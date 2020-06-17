@@ -1,0 +1,85 @@
+---
+- hosts: cs
+  become_user: root
+  become_method: sudo
+  gather_facts: no
+
+  vars:
+    ipDocker: []
+
+  vars_files:
+    - "vars/params.yml"
+
+  tasks:
+
+    - name: Update the list ipDocker
+      set_fact:
+        ipDocker: "{{ ipDocker }} + [ '{{ item.cidr.split('/').0 }}' ]"
+      loop: "{{ ipServer }}"
+
+    # - name: create new directory for html content (locally)
+    #   file:
+    #     path: html
+    #     state: directory
+    #   ignore_errors: yes
+    #   delegate_to: 127.0.0.1
+    #
+    # - name: create new directory for html content (locally) per docker
+    #   file:
+    #     path: "html/{{ item.name }}"
+    #     state: directory
+    #   loop: "{{ docker }}"
+    #   loop_control:
+    #    label: "Create new directory {{ item.name }}"
+    #   ignore_errors: yes
+    #   delegate_to: 127.0.0.1
+    #
+    # - name: Create a content html page locally
+    #   local_action:
+    #     copy content="I am server {{ item.0.name }}, My ip is {{ item.1 }}" dest="html/{{ item.0.name }}/index.html"
+    #   with_together:
+    #     - "{{ docker }}"
+    #     - "{{ ipDocker }}"
+    #   loop_control:
+    #    label: "Create new content for {{ item.0.name }}"
+    #   ignore_errors: yes
+    #
+    # - name: create new directory for html content (remotely)
+    #   file:
+    #     path: "{{ item.name }}"
+    #     state: directory
+    #   loop: "{{ docker }}"
+    #   loop_control:
+    #    label: "Create new directory {{ item.name }}"
+    #   ignore_errors: yes
+    #
+    # - name: copy html files
+    #   become: true
+    #   copy:
+    #     src: "html/{{ item.name }}/index.html"
+    #     dest: "/home/avi/{{ item.name }}/index.html"
+    #   loop: "{{ docker }}"
+    #   loop_control:
+    #    label: "Copy html file html/{{ item.name }}/index.html"
+
+    # - name: create docker volume, instance
+    #   become: true
+    #   shell: |
+    #     docker volume create {{ item.0.name }}
+    #     cp {{ item.0.name }}/index.html /var/lib/docker/volumes/{{ item.0.name }}/_data/index.html
+    #     docker run -d -p {{ item.1 }}:80:80 --name {{ item.0.name }} --mount source={{ item.0.name }},target=/usr/share/nginx/html/custom --restart unless-stopped {{ item.0.image }}
+    #   with_together:
+    #     - "{{ docker }}"
+    #     - "{{ ipDocker }}"
+    #   loop_control:
+    #    label: "Create docker volume and instance {{ item.0.name }}"
+
+    - name: create instances
+      become: true
+      shell: |
+        docker run -d -p {{ item.1 }}:80:80 --name {{ item.0.name }} {{ item.0.image }}
+      with_together:
+        - "{{ docker }}"
+        - "{{ ipDocker }}"
+      loop_control:
+       label: "Create docker volume and instance {{ item.0.name }}"

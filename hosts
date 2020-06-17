@@ -8,7 +8,17 @@ all:
     controller:
       hosts:
         192.168.142.135:
-
+    vyos:
+      hosts:
+        192.168.142.136:
+      vars:
+        ansible_user: vyos
+        ansible_ssh_pass: vyos
+        ansible_connection: network_cli
+        ansible_network_os: vyos
+    cs:
+      hosts:
+        192.168.142.131:
 
   vars:
     ansible_user: avi

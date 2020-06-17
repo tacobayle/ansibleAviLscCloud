@@ -1,0 +1,54 @@
+---
+- hosts: cs
+  become_user: root
+  become_method: sudo
+  gather_facts: no
+
+  vars_files:
+    - "vars/params.yml"
+
+  tasks:
+
+    # - name: Update dhclient.conf with DNS value
+    #   become: true
+    #   lineinfile:
+    #     dest: /etc/dhcp/dhclient.conf
+    #     line: |
+    #       interface "{{ dns.iface }}" {
+    #         supersede domain-name-servers {{ dns.ip }};
+    #       }
+    #
+    #
+    # - name: Update resolv.conf.conf with DNS value
+    #   become: true
+    #   lineinfile:
+    #     path: /etc/resolv.conf
+    #     regexp: '^nameserver'
+    #     line: "nameserver {{ dns.ip }}"
+
+    - name: configure Client IP(s)
+      become: true
+      shell: |
+         ip address add {{ item.cidr }} dev {{ item.iface }}
+         ip link set {{ item.iface }} up
+      loop: "{{ ipClient }}"
+      loop_control:
+       label: "Configure {{ item.cidr }} for interface {{ item.iface }}"
+
+    - name: configure Server IP(s)
+      become: true
+      shell: |
+         ip address add {{ item.cidr }} dev {{ item.iface }}
+         ip link set {{ item.iface }} up
+      loop: "{{ ipServer }}"
+      loop_control:
+       label: "Configure {{ item.cidr }} for interface {{ item.iface }}"
+
+    - name: update routing table
+      become: true
+      shell: |
+        ip route add {{ item.cidr }} via {{ item.nexthop }}
+      ignore_errors: yes
+      loop: "{{ routes }}"
+      loop_control:
+       label: "Configure route {{ item.cidr }} via {{ item.nexthop }}"

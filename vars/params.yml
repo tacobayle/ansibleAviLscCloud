@@ -6,7 +6,7 @@ cloudconnectoruser:
 dns:
   name: dns-avi
   domain:
-    name: demoavi.local
+    name: lsc.avidemo.fr
 
 network:
   name: net-avi
@@ -16,20 +16,25 @@ network:
         mask: 24
         ip_addr:
           type: V4
-          addr: 10.1.2.0
+          addr: 5.5.5.0
       static_ranges:
         - begin:
             type: V4
-            addr: 10.1.2.51
+            addr: 5.5.5.51
           end:
             type: V4
-            addr: 10.1.2.100
+            addr: 5.5.5.100
 
 
 
 ipam:
   name: ipam-avi
-#  network: 0
+
+serviceEngineGroup:
+  - name: Default-Group
+    ha_mode: HA_MODE_SHARED # N+M
+    min_scaleout_per_vs: 2 # required for acitive active
+    buffer_se: 0
 
 cloud:
   tenant_ref: admin
@@ -41,17 +46,9 @@ cloud:
     dpdk: 'No'
     se_inband_mgmt: False
     se_group_ref: Default-Group
-    # addr: 192.168.17.153
 
 vrfcontext:
   - name: global
-    gw:
-    - gateway_monitor_success_threshold: 15
-      gateway_ip:
-        type: V4
-        addr: 10.1.2.1
-      gateway_monitor_fail_threshold: 10
-      gateway_monitor_interval: 1000
     bgp_profile:
       peers:
       - keepalive_interval: 1
@@ -91,24 +88,6 @@ avi_healthmonitor:
       - HTTP_3XX
       - HTTP_5XX
 
-# avi_pool:
-#   - name: pool1
-#     lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
-#     health_monitor_refs: hm1
-#     servers:
-#       - ipaddr: 172.16.3.253
-#         iptype: 'V4'
-#       - ipaddr: 172.16.3.254
-#         iptype: 'V4'
-#   - name: pool2
-#     lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
-#     health_monitor_refs: hm1
-#     servers:
-#       - ipaddr: 172.16.3.251
-#         iptype: 'V4'
-#       - ipaddr: 172.16.3.252
-#         iptype: 'V4'
-
 avi_pool:
   - name: pool1
     lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
@@ -133,47 +112,69 @@ avi_pool:
 
 virtualservice:
   dns:
-    - name: vs1-dns
+    - name: vs-dns
       port: 53
-      vip: 10.1.2.50
-      enable_rhi: false
+      vip: 5.5.5.50
+      enable_rhi: true
       application_profile_ref: System-DNS
       network_profile_ref: System-UDP-Per-Pkt
   http:
-    - name: vs2-http
-      # port: 80
+    - name: vs1-http
       services:
         - port: 80
           enable_ssl: false
         - port: 443
           enable_ssl: true
       pool_ref: pool1
-      enable_rhi: false
+      enable_rhi: true
       network_ref: net-avi
       mask: 24
       type: V4
-      addr: 10.1.2.0
-      fqdn: vs2.demoavi.local
-    - name: vs3-https
-      # port: 80
+      addr: 5.5.5.0
+      fqdn: vs2.lsc.avidemo.fr
+    - name: vs2-https
       services:
         - port: 443
           enable_ssl: true
       pool_ref: pool2
-      enable_rhi: false
+      enable_rhi: true
       network_ref: net-avi
       mask: 24
       type: V4
-      addr: 10.1.2.0
-      fqdn: vs3.demoavi.local
-  # https:
-  #   - name: vs3-https
-  #     services:
-  #       - port: 443
-  #         enable_ssl: true
-  #     #enable_ssl: true
-  #     #port: 443
-  #     pool_ref: pool2
-  #     fqdn: vs3.demoavi.local
-  #     ssl_profile_ref: System-Standard
-  #     ssl_key_and_certificate_refs: System-Default-Cert
+      addr: 5.5.5.0
+      fqdn: vs3.lsc.avidemo.fr
+
+
+vyOSConfig: vyos.conf
+
+ipClient:
+  - iface: ens33
+    cidr: 10.1.4.2/24
+  - iface: ens33
+    cidr: 10.1.4.3/24
+  - iface: ens33
+    cidr: 10.1.4.4/24
+
+ipServer:
+  - iface: ens34
+    cidr: 172.16.3.251/24
+  - iface: ens34
+    cidr: 172.16.3.252/24
+  - iface: ens34
+    cidr: 172.16.3.253/24
+  - iface: ens34
+    cidr: 172.16.3.254/24
+
+routes:
+  - cidr: 5.5.5.0/24
+    nexthop: 10.1.4.1
+
+docker:
+  - name: web1
+    image: tacobayle/web1
+  - name: web2
+    image: tacobayle/web2
+  - name: web3
+    image: tacobayle/web3
+  - name: web4
+    image: tacobayle/web4

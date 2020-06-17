@@ -13,8 +13,8 @@
 
     - name: Update vrf with bgp parameters
       avi_vrfcontext:
-        avi_api_update_method: patch
-        avi_api_patch_op: add
+        avi_api_update_method: put
+        #avi_api_patch_op: add
         avi_credentials: "{{ avi_credentials }}"
         api_version: "{{ avi_credentials.api_version }}"
         name: "{{ item.name }}"
@@ -22,18 +22,17 @@
       loop: "{{ vrfcontext }}"
       loop_control:
        label: "Update vrf {{ item.name }}"
-      when: virtualservice.http.0.enable_rhi
 # this when statement needs to be changed because it checks only item 1 of the lists of virtualservice http
 
-    - name: Configure gateway monitor
-      avi_vrfcontext:
-        avi_api_update_method: put
-        avi_api_patch_op: add
-        avi_credentials: "{{ avi_credentials }}"
-        api_version: "{{ avi_credentials.api_version }}"
-        name: "{{ item.name }}"
-        gateway_mon: "{{ item.gw }}"
-      loop: "{{ vrfcontext }}"
-      loop_control:
-       label: "Update vrf {{ item.name }}"
-      when: not virtualservice.http.0.enable_rhi
+    # - name: Configure gateway monitor
+    #   avi_vrfcontext:
+    #     avi_api_update_method: put
+    #     avi_api_patch_op: add
+    #     avi_credentials: "{{ avi_credentials }}"
+    #     api_version: "{{ avi_credentials.api_version }}"
+    #     name: "{{ item.name }}"
+    #     gateway_mon: "{{ item.gw }}"
+    #   loop: "{{ vrfcontext }}"
+    #   loop_control:
+    #    label: "Update vrf {{ item.name }}"
+    #   when: not virtualservice.http.0.enable_rhi
