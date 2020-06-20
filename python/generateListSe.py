@@ -47,13 +47,17 @@ dictAttribute['attr_key'] = 'SE_INBAND_MGMT'
 dictAttribute['attr_val'] = param_loaded['cloud']['se']['se_inband_mgmt']
 ListHostAttr.append(dictAttribute)
 finalList = []
+index = 0
 for item in [*data_loaded['all']['children']['se']['hosts']]:
   finalDict = {}
   finalDict['host_attr'] = ListHostAttr
-  finalDict['se_group_ref'] = '/api/serviceenginegroup/?name=' + param_loaded['cloud']['se']['se_group_ref']
+  if index == len(param_loaded['cloud']['se']['se_group_ref']):
+    index = 0
+  finalDict['se_group_ref'] = '/api/serviceenginegroup/?name=' + param_loaded['cloud']['se']['se_group_ref'][index]
   host_ip = {}
   host_ip['type'] = 'V4'
   host_ip['addr'] = item
   finalDict['host_ip'] = host_ip
   finalList.append(finalDict)
+  index += 1
 print(json.dumps(finalList))

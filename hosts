@@ -5,10 +5,13 @@ all:
       hosts:
         192.168.142.129:
         192.168.142.130:
+        192.168.142.137:
     controller:
       hosts:
         192.168.142.135:
-
+    cs:
+      hosts:
+        192.168.142.131:
 
   vars:
     ansible_user: avi

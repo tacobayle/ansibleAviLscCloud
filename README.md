@@ -1,10 +1,12 @@
 # aviLscCloud
 
 ## Goals
-Ansible playbooks to configure Avi LSC Cloud and VS. (Arp or native scaling use case)
+Ansible playbooks to configure Avi LSC Cloud and VS.
+Se group upgrade use case with multiple SE Group.
 
 ## Prerequisites:
 1. Make sure the controller is available at the IP defined in vars/creds.json
+2. Make sure the service engines (3) are available at the IP defined in the hosts file
 2. Make sure avisdk is installed:
 ```
 pip install avisdk
@@ -40,23 +42,43 @@ avi@ansible:~/ansible/aviLscCloud$
 ```
 {"avi_credentials": {"username": "admin", "controller": "172.16.1.5", "password": "Avi_2019", "api_version": "17.2.14"}, "avi_cluster": false}
 ```
-2. All the paramaters/variables are stored in variables.tf
+2. All the paramaters/variables are stored in vars/params.yml
+3. IP of the hosts are defined in the hosts file:
+```
+---
+all:
+  children:
+    se:
+      hosts:
+        192.168.142.129:
+        192.168.142.130:
+        192.168.142.137:
+    controller:
+      hosts:
+        192.168.142.135:
+    cs:
+      hosts:
+        192.168.142.131:
 
+  vars:
+    ansible_user: avi
+    ansible_ssh_private_key_file: "/home/avi/.ssh/id_rsa.local"
+```
 
 ## Use the ansible playbook to:
 1. Configure a cloud user
 2. Configure the SEs with ssh key
-3. Configure Network, Ipam and DNS profiles
-3. Configure a LSC cloud with all SE from the ansible inventory (group 'SE'), with Ipam and DNS profiles
-5. Configure VS(s):
+3. Configure SE group
+4. Configure Network, Ipam and DNS profiles
+5. Configure a LSC cloud with all SE from the ansible inventory (group 'SE'), with Ipam and DNS profiles
+6. Configure VS(s):
 - DNS VS
 - Configure health monitor
 - Configure Pool with associated health monitor
-- non DNS VS (with Ipam and DNS)
-
+- non DNS VS (with Ipam and DNS) related to two SE group
+7. Configure client and server
 
 ## Run the playbook:
 ansible-playbook -i hosts main.yml
 
 ## Improvement:
-BGP branch allows a BGP use case demo

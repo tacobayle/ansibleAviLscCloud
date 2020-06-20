@@ -20,6 +20,7 @@
         name: "{{ item.name }}"
         application_profile_ref: "/api/applicationprofile/?name={{ item.application_profile_ref | default('System-DNS') }}"
         network_profile_ref: "/api/networkprofile/?name={{ item.network_profile_ref | default('System-UDP-Per-Pkt') }}"
+        se_group_ref: "/api/serviceenginegroup/?name={{ item.se_group_ref | default('Default-Group') }}"
         services:
           - port: "{{ item.port }}"
         enable_rhi: "{{ item.enable_rhi }}"
@@ -112,6 +113,7 @@
         avi_api_update_method: patch
         avi_api_patch_op: add
         name: "{{ item.name }}"
+        se_group_ref: "/api/serviceenginegroup/?name={{ item.se_group_ref | default('Default-Group') }}"
         ssl_profile_ref: "/api/sslprofile/?name={{ item.ssl_profile_ref | default('System-Standard') }}"
         ssl_key_and_certificate_refs: "/api/sslkeyandcertificate/?name={{ item.ssl_key_and_certificate_refs | default('System-Default-Cert') }}"
         services: "{{ item.services }}"

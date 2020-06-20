@@ -31,6 +31,17 @@ ipam:
   name: ipam-avi
 #  network: 0
 
+serviceEngineGroup:
+  - name: Default-Group
+    ha_mode: HA_MODE_SHARED # N+M
+    min_scaleout_per_vs: 2 # required for active active
+    buffer_se: 0
+  - name: dev-Group
+    ha_mode: HA_MODE_SHARED # N+M
+    min_scaleout_per_vs: 1 # required for active standby
+    buffer_se: 0
+
+
 cloud:
   tenant_ref: admin
   dns_provider_ref: dns-avi
@@ -40,7 +51,9 @@ cloud:
     mem: 1
     dpdk: 'No'
     se_inband_mgmt: False
-    se_group_ref: Default-Group
+    se_group_ref:
+      - Default-Group
+      - dev-Group
     # addr: 192.168.17.153
 
 vrfcontext:
@@ -139,6 +152,7 @@ virtualservice:
       enable_rhi: false
       application_profile_ref: System-DNS
       network_profile_ref: System-UDP-Per-Pkt
+      se_group_ref: Default-Group
   http:
     - name: vs2-http
       # port: 80
@@ -154,6 +168,7 @@ virtualservice:
       type: V4
       addr: 10.1.2.0
       fqdn: vs2.demoavi.local
+      se_group_ref: dev-Group
     - name: vs3-https
       # port: 80
       services:
@@ -166,6 +181,8 @@ virtualservice:
       type: V4
       addr: 10.1.2.0
       fqdn: vs3.demoavi.local
+      se_group_ref: Default-Group
+
   # https:
   #   - name: vs3-https
   #     services:
@@ -177,3 +194,27 @@ virtualservice:
   #     fqdn: vs3.demoavi.local
   #     ssl_profile_ref: System-Standard
   #     ssl_key_and_certificate_refs: System-Default-Cert
+
+ipClient:
+  - iface: ens33
+    cidr: 10.1.2.2/24
+
+ipServer:
+  - iface: ens34
+    cidr: 172.16.3.251/24
+  - iface: ens34
+    cidr: 172.16.3.252/24
+  - iface: ens34
+    cidr: 172.16.3.253/24
+  - iface: ens34
+    cidr: 172.16.3.254/24
+
+docker:
+  - name: web1
+    image: tacobayle/web1
+  - name: web2
+    image: tacobayle/web2
+  - name: web3
+    image: tacobayle/web3
+  - name: web4
+    image: tacobayle/web4
