@@ -80,5 +80,8 @@ all:
 
 ## Run the playbook:
 ansible-playbook -i hosts main.yml
+```
+upgrade segroup se_group_refs Default-Group image_ref 18.2.9-9147-20200606.003937
+```
 
 ## Improvement:
