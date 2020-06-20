@@ -14,12 +14,14 @@ ansible-galaxy install -f avinetworks.avisdk
 4. Make sure one VyOS router is available
 
 Topology is:
+```
 
                                                Web1
                                     SE1        Web2
 Client   <==>   VyOS router   <==>       <==>
                                     SE2        Web3
                                                Web4
+```
 
 ## Environment:
 
@@ -105,7 +107,12 @@ while true ; do curl --interface 10.1.4.2 5.5.5.51 ; sleep 0.5 ; done
 while true ; do curl --interface 10.1.4.3 5.5.5.51 ; sleep 0.5 ; done
 while true ; do curl --interface 10.1.4.4 5.5.5.51 ; sleep 0.5 ; done
 ```
-stop the docker to make sure BGP will update:
+check the BGP routes:
+```
+show ip bgp
+show ip route
+```
+stop the docker to make sure BGP will update (RHI feature):
 ```
 sudo docker stop web4
 sudo docker stop web3

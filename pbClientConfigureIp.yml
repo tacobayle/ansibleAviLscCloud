@@ -48,7 +48,6 @@
       become: true
       shell: |
         ip route add {{ item.cidr }} via {{ item.nexthop }}
-      ignore_errors: yes
       loop: "{{ routes }}"
       loop_control:
        label: "Configure route {{ item.cidr }} via {{ item.nexthop }}"

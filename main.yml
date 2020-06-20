@@ -8,5 +8,4 @@
 - import_playbook: pbVs.yml
 - import_playbook: pbVyos.yml
 - import_playbook: pbClientConfigureIp.yml
-- import_playbook: pbClientConfigureIp.yml
 - import_playbook: pbServerDocker.yml
