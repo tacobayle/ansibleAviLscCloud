@@ -54,7 +54,7 @@ avi@ansible:~/ansible/aviLscCloud$
 - Configure health monitor
 - Configure Pool with associated health monitor
 - http/https VS (with Ipam and DNS)
-7. Configure GSLB (Infra)
+7. Configure GSLB (Infra) and geo profile
 8. Configure GSLB Service
 
 

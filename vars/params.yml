@@ -190,6 +190,17 @@ avi_gslb:
 dns_configs:
   - domain_name: gslb.avidemo.fr
 
+avi_gslbgeodbprofile:
+  - name: geoProfile
+    entries:
+      - priority: 10
+        file:
+          #timestamp: 1595599889
+          #checksum: 18751e4db1f32a49f2a8be157218f2e2078734c20f8f39b0839a3e951e858d20
+          format: GSLB_GEODB_FILE_FORMAT_AVI
+          #file_id: AviGeoDb.txt.gz_1595599889.gz
+          filename: AviGeoDb.txt.gz
+
 avi_gslbservice:
   - name: *vs0
     groups:

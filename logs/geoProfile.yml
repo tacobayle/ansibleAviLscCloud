@@ -1,0 +1,17 @@
+---
+count: 1
+results:
+- uuid: gslbgeodbprofile-ae5d49df-cada-4d86-a94a-8452ac177196
+  _last_modified: '1595599889367482'
+  url: https://192.168.142.135/api/gslbgeodbprofile/gslbgeodbprofile-ae5d49df-cada-4d86-a94a-8452ac177196
+  tenant_ref: https://192.168.142.135/api/tenant/admin
+  is_federated: true
+  entries:
+  - priority: 10
+    file:
+      timestamp: 1595599889
+      checksum: 18751e4db1f32a49f2a8be157218f2e2078734c20f8f39b0839a3e951e858d20
+      format: GSLB_GEODB_FILE_FORMAT_AVI
+      file_id: AviGeoDb.txt.gz_1595599889.gz
+      filename: AviGeoDb.txt.gz
+  name: geoProfile

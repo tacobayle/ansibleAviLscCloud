@@ -49,6 +49,20 @@
       tags:
         - infraGslb
 
+    - name: Enable GSLB profile
+      avi_gslbgeodbprofile:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        tenant: "{{ item.tenant_ref | default('admin') }}"
+        tenant_ref: "/api/tenant?name={{ item.tenant_ref | default('admin') }}"
+        name: "{{ item.name }}"
+        entries: "{{ item.entries }}"
+      loop: "{{ avi_gslbgeodbprofile }}"
+      tags:
+        - geo
+
+
+
     # - name: Enable the GSLB config with the leader cluster (from creds.json)
     #   avi_gslb:
     #     avi_credentials: "{{ avi_credentials }}"
