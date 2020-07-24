@@ -1,0 +1,58 @@
+---
+- hosts: localhost
+  connection: local
+
+  vars_files:
+    - "vars/creds.json"
+    - "vars/params.yml"
+
+  roles:
+    - role: "avinetworks.avisdk"
+
+
+  tasks:
+
+    # - name: Debug
+    #   debug:
+    #     msg: "{{ dns_configs.0.domain_name }}"
+    #
+    # - name: Debug
+    #   debug:
+    #     msg: "{{ avi_gslbservice.0.name }}"
+    #
+    # - name: Create a list of domains for GSCLB service creation
+    #   set_fact:
+    #     domainName: "{{ (domainName | default([])) + [item.name + '.' + dns_configs.0.domain_name] }}"
+    #   loop: "{{ avi_gslbservice }}"
+    #   loop_control:
+    #    label: "{{ item.name }}"
+    #
+    # - name: Debug
+    #   debug:
+    #     msg: "{{ domainName }}"
+    #
+    #
+    # - name: with_together -> loop
+    #   debug:
+    #     msg: "{{ item.0 }} - {{ item.1 }}"
+    #   loop: "{{ avi_gslbservice | zip(domainName) |list }}"
+
+    - name: Enable a GSLB service
+      avi_gslbservice:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        tenant: "{{ item.tenant_ref | default('admin') }}"
+        tenant_ref: "/api/tenant?name={{ item.tenant_ref | default('admin') }}"
+        name: "{{ item.name }}"
+        health_monitor_refs:
+        - "/api/healthmonitor?name={{ item.health_monitor_refs | default('System-GSLB-HTTPS') }}"
+        domain_names:
+          - "{{ item.name }}.{{ dns_configs.0.domain_name }}"
+        groups: "{{ item.groups }}"
+        site_persistence_enabled: "{{ item.site_persistence_enabled }}"
+        min_members: "{{ item.min_members }}"
+        health_monitor_scope: "{{ item.health_monitor_scope }}"
+        pool_algorithm: "{{ item.pool_algorithm }}"
+      loop: "{{ avi_gslbservice }}"
+      loop_control:
+        label: "{{ item.name }}"

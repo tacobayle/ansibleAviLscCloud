@@ -1,0 +1,99 @@
+---
+- hosts: localhost
+  connection: local
+
+  vars_files:
+    - "vars/creds.json"
+    - "vars/params.yml"
+
+  roles:
+    - role: "avinetworks.avisdk"
+
+  tasks:
+
+    - name: Debug
+      debug:
+        msg: "{{ avi_credentials }}"
+      tags:
+        - debug
+
+    - name: Gather cluster uuid
+      avi_api_session:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        http_method: get
+        timeout: 300
+        path: cluster
+        tenant: "{{ tenant | default('admin') }}"
+      register: statusCluster
+
+    - name: Debug
+      debug:
+        msg: "{{ statusCluster.obj.uuid }}"
+      tags:
+        - debug
+
+    - name: Enable the GSLB config with the leader cluster
+      avi_gslb:
+        avi_credentials: "{{ avi_credentials }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        tenant: "{{ item.tenant_ref | default('admin') }}"
+        tenant_ref: "/api/tenant?name={{ item.tenant_ref | default('admin') }}"
+        name: "Default"
+        leader_cluster_uuid: "{{ statusCluster.obj.uuid }}"
+        sites: "{{ avi_gslb.sites }}"
+        dns_configs: "{{ dns_configs }}"
+      # loop: "{{ avi_gslb }}"
+      # loop_control:
+      #   label: "{{ item.name }}"
+      tags:
+        - infraGslb
+
+    # - name: Enable the GSLB config with the leader cluster (from creds.json)
+    #   avi_gslb:
+    #     avi_credentials: "{{ avi_credentials }}"
+    #     api_version: "{{ avi_credentials.api_version }}"
+    #     tenant: "{{ item.tenant_ref | default('admin') }}"
+    #     tenant_ref: "/api/tenant?name={{ item.tenant_ref | default('admin') }}"
+    #     name: "Default"
+    #     leader_cluster_uuid: "{{ statusCluster.obj.uuid }}"
+    #     sites:
+    #       - username: "{{ avi_credentials.username }}"
+    #         password: "{{ avi_credentials.password }}"
+    #         cluster_uuid: "{{ statusCluster.obj.uuid }}"
+    #         member_type: GSLB_ACTIVE_MEMBER
+    #         name: "local_controller"
+    #         ip_addresses:
+    #           - type: "V4"
+    #             addr: "{{ avi_credentials.controller }}"
+    #     dns_configs: "{{ dns_configs }}"
+    #   # loop: "{{ avi_gslb }}"
+    #   # loop_control:
+    #   #   label: "{{ item.name }}"
+    #   tags:
+    #     - infraGslb
+
+    # - name: Add a new site (from vars/params.yml)
+    #   avi_gslb:
+    #     avi_credentials: "{{ avi_credentials }}"
+    #     api_version: "{{ avi_credentials.api_version }}"
+    #     avi_api_update_method: patch
+    #     avi_api_patch_op: add
+    #     tenant: "{{ item.tenant_ref | default('admin') }}"
+    #     tenant_ref: "/api/tenant?name={{ item.tenant_ref | default('admin') }}"
+    #     name: "Default"
+    #     leader_cluster_uuid: "{{ statusCluster.obj.uuid }}"
+    #     sites: "{{ avi_gslb.sites }}"
+      #     - username: "{{ item.username |  default('admin') }}"
+      #       password: "{{ item.password |  default('Avi_2020') }}"
+      #       cluster_uuid: "{{ item.uuid |  default('cluster-5cb69bf2-01a5-4a3f-aac3-a28f23fdaaaa') }}"
+      #       member_type: "{{ item.member_type }}"
+      #       name: "{{ item.name }}"
+      #       ip_addresses:
+      #         - type: "V4"
+      #           addr: "{{ item.addr }}"
+      # # loop: "{{ avi_gslb.sites }}"
+      # # loop_control:
+      # #   label: "{{ item.name }}"
+      # tags:
+      #   - infraGslb

@@ -6,7 +6,7 @@ cloudconnectoruser:
 dns:
   name: dns-avi
   domain:
-    name: demoavi.local
+    name: lsc.avidemo.fr
 
 network:
   name: net-avi
@@ -78,6 +78,10 @@ vrfcontext:
       shutdown: false
       hold_time: 180
 
+
+avi_applicationprofile:
+  - name: appProfileNic
+
 avi_healthmonitor:
   - name: hm1
     receive_timeout: 1
@@ -133,14 +137,14 @@ avi_pool:
 
 virtualservice:
   dns:
-    - name: vs1-dns
+    - name: app1-dns
       port: 53
       vip: 10.1.2.50
       enable_rhi: false
       application_profile_ref: System-DNS
       network_profile_ref: System-UDP-Per-Pkt
   http:
-    - name: vs2-http
+    - name: &vs0 app2
       # port: 80
       services:
         - port: 80
@@ -153,8 +157,8 @@ virtualservice:
       mask: 24
       type: V4
       addr: 10.1.2.0
-      fqdn: vs2.demoavi.local
-    - name: vs3-https
+      # fqdn: vs2.demoavi.local
+    - name: &vs1 app3
       # port: 80
       services:
         - port: 443
@@ -165,7 +169,73 @@ virtualservice:
       mask: 24
       type: V4
       addr: 10.1.2.0
-      fqdn: vs3.demoavi.local
+      # fqdn: vs3.demoavi.local
+
+
+avi_gslb:
+  sites:
+    - username: "{{ avi_credentials.username }}"
+      password: "{{ avi_credentials.password }}"
+      cluster_uuid: "{{ statusCluster.obj.uuid }}"
+      member_type: GSLB_ACTIVE_MEMBER
+      name: "local_controller"
+      ip_addresses:
+        - type: "V4"
+          addr: "{{ avi_credentials.controller }}"
+      dns_vses:
+      - domain_names:
+        - "{{ dns_configs.0.domain_name }}"
+        dns_vs_uuid: "{{ OutputVsDns.results.0.obj.uuid }}"
+
+dns_configs:
+  - domain_name: gslb.avidemo.fr
+
+avi_gslbservice:
+  - name: *vs0
+    groups:
+    - priority: 10
+      members:
+      - ratio: 1
+        ip:
+          type: "{{ OutputVsHttp.results.0.obj.vip.0.ip_address.type }}"
+          addr: "{{ OutputVsHttp.results.0.obj.vip.0.ip_address.addr }}"
+        enabled: true
+        vs_uuid: "{{ OutputVsHttp.results.0.obj.uuid }}"
+        cluster_uuid: "{{ statusCluster.obj.uuid }}"
+        resolve_fqdn_to_v6: false
+      enabled: true
+      name: lsc
+      algorithm: GSLB_ALGORITHM_ROUND_ROBIN
+    site_persistence_enabled: false
+    min_members: 0
+    health_monitor_scope: GSLB_SERVICE_HEALTH_MONITOR_ALL_MEMBERS
+    pool_algorithm: GSLB_SERVICE_ALGORITHM_GEO
+  - name: *vs1
+    # domain_names:
+    # - toto
+    groups:
+    - priority: 10
+      members:
+      - ratio: 1
+        ip:
+          type: "{{ OutputVsHttp.results.1.obj.vip.0.ip_address.type }}"
+          addr: "{{ OutputVsHttp.results.1.obj.vip.0.ip_address.addr }}"
+        enabled: true
+        vs_uuid: "{{ OutputVsHttp.results.1.obj.uuid }}"
+        cluster_uuid: "{{ statusCluster.obj.uuid }}"
+        resolve_fqdn_to_v6: false
+      enabled: true
+      name: lsc
+      algorithm: GSLB_ALGORITHM_ROUND_ROBIN
+    site_persistence_enabled: false
+    min_members: 0
+    health_monitor_scope: GSLB_SERVICE_HEALTH_MONITOR_ALL_MEMBERS
+    pool_algorithm: GSLB_SERVICE_ALGORITHM_GEO
+    # - name: tata
+    #   # domain_names:
+    #   # - toto
+
+
   # https:
   #   - name: vs3-https
   #     services:

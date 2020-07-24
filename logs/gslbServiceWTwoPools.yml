@@ -1,0 +1,80 @@
+---
+count: 2
+results:
+- resolve_cname: false
+  controller_health_status_enabled: true
+  _last_modified: '1595580718214191'
+  wildcard_match: false
+  url: https://192.168.142.135/api/gslbservice/gslbservice-2a570ab9-7883-4375-be90-e72de61ee75d
+  tenant_ref: https://192.168.142.135/api/tenant/admin
+  enabled: true
+  is_federated: true
+  domain_names:
+  - app2.gslb.local
+  use_edns_client_subnet: true
+  groups:
+  - priority: 10
+    members:
+    - ratio: 1
+      ip:
+        type: V4
+        addr: 10.1.2.51
+      enabled: true
+      vs_uuid: virtualservice-ab170f13-842b-4b01-a165-ec9ca7f0320e
+      cluster_uuid: cluster-b803a82a-ccb3-4be2-ac8e-e6c3393c417a
+      resolve_fqdn_to_v6: false
+    enabled: true
+    name: lsc
+    algorithm: GSLB_ALGORITHM_ROUND_ROBIN
+  - priority: 10
+    members:
+    - public_ip:
+        ip:
+          type: V4
+          addr: 1.1.1.1
+      ip:
+        type: V4
+        addr: 1.1.1.1
+      ratio: 1
+      enabled: true
+      resolve_fqdn_to_v6: false
+    enabled: true
+    name: remote
+    algorithm: GSLB_ALGORITHM_ROUND_ROBIN
+  site_persistence_enabled: false
+  min_members: 0
+  health_monitor_scope: GSLB_SERVICE_HEALTH_MONITOR_ALL_MEMBERS
+  name: app2
+  pool_algorithm: GSLB_SERVICE_ALGORITHM_GEO
+  uuid: gslbservice-2a570ab9-7883-4375-be90-e72de61ee75d
+- resolve_cname: false
+  controller_health_status_enabled: true
+  _last_modified: '1595580623965265'
+  wildcard_match: false
+  url: https://192.168.142.135/api/gslbservice/gslbservice-cc1ae693-5470-43d2-8537-cfa81c2c0aec
+  tenant_ref: https://192.168.142.135/api/tenant/admin
+  enabled: true
+  is_federated: true
+  domain_names:
+  - app3.gslb.local
+  use_edns_client_subnet: true
+  groups:
+  - priority: 10
+    members:
+    - ratio: 1
+      ip:
+        type: V4
+        addr: 10.1.2.52
+      enabled: true
+      vs_uuid: virtualservice-4337503c-f56c-47f3-86ac-14790b121b21
+      cluster_uuid: cluster-b803a82a-ccb3-4be2-ac8e-e6c3393c417a
+      resolve_fqdn_to_v6: false
+    enabled: true
+    name: lsc
+    algorithm: GSLB_ALGORITHM_ROUND_ROBIN
+  site_persistence_enabled: false
+  min_members: 0
+  health_monitor_scope: GSLB_SERVICE_HEALTH_MONITOR_ALL_MEMBERS
+  name: app3
+  pool_algorithm: GSLB_SERVICE_ALGORITHM_GEO
+  uuid: gslbservice-cc1ae693-5470-43d2-8537-cfa81c2c0aec

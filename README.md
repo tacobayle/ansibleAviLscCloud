@@ -47,12 +47,15 @@ avi@ansible:~/ansible/aviLscCloud$
 1. Configure a cloud user
 2. Configure the SEs with ssh key
 3. Configure Network, Ipam and DNS profiles
-3. Configure a LSC cloud with all SE from the ansible inventory (group 'SE'), with Ipam and DNS profiles
-5. Configure VS(s):
+4. Configure a LSC cloud with all SE from the ansible inventory (group 'SE'), with Ipam and DNS profiles
+5. Configure Application Profile
+6. Configure VS(s):
 - DNS VS
 - Configure health monitor
 - Configure Pool with associated health monitor
-- non DNS VS (with Ipam and DNS)
+- http/https VS (with Ipam and DNS)
+7. Configure GSLB (Infra)
+8. Configure GSLB Service
 
 
 ## Run the playbook:

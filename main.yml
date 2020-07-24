@@ -4,4 +4,7 @@
 - import_playbook: pbIpamDns.yml
 - import_playbook: pbCloud.yml
 # - import_playbook: configureVrf.yml
+- import_playbook: pbApplicationProfile.yml
 - import_playbook: pbVs.yml
+- import_playbook: pbGslb.yml
+- import_playbook: pbGslbService.yml

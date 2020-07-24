@@ -1,5 +1,5 @@
 ---
-- hosts: controller
+- hosts: localhost
   connection: local
 
   vars_files:
@@ -41,6 +41,13 @@
           significant_log_throttle: 10
           client_insights: PASSIVE
       loop: "{{ virtualservice.dns }}"
+      register: OutputVsDns
+
+    - name: Debug
+      debug:
+        msg: "{{ OutputVsDns.results.0.obj.uuid }}"
+
+
 
 
     - name: Update system config with DNS VS
@@ -128,7 +135,7 @@
                   type: "{{ item.type | default(network.subnet.0.prefix.ip_addr.type) }}"
                   addr: "{{ item.addr | default(network.subnet.0.prefix.ip_addr.addr) }}"
         dns_info:
-          - fqdn: "{{ item.fqdn }}"
+          - fqdn: "{{ item.dns_info.0 | default(item.name + '.' + dns.domain.name) }}"
         analytics_policy:
           udf_log_throttle: 10
           # enabled: true
@@ -142,3 +149,9 @@
           significant_log_throttle: 10
           client_insights: PASSIVE
       loop: "{{ virtualservice.http }}"
+      register: OutputVsHttp
+
+
+    - name: Debug
+      debug:
+        msg: "{{ OutputVsHttp.results.1.obj.uuid }}"

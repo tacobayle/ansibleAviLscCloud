@@ -1,0 +1,43 @@
+{
+  "count": 1,
+  "results": [
+    {
+      "uuid": "gslb-2f8887a9-e208-42a1-93c8-36e5ebbbe3f1",
+      "_last_modified": "1595572553864758",
+      "url": "https://192.168.142.135/api/gslb/gslb-2f8887a9-e208-42a1-93c8-36e5ebbbe3f1",
+      "maintenance_mode": false,
+      "view_id": 0,
+      "tenant_ref": "https://192.168.142.135/api/tenant/admin",
+      "is_federated": true,
+      "sites": [
+        {
+          "username": "admin",
+          "name": "local_controller",
+          "ip_addresses": [
+            {
+              "type": "V4",
+              "addr": "192.168.142.135"
+            }
+          ],
+          "enabled": true,
+          "member_type": "GSLB_ACTIVE_MEMBER",
+          "cluster_uuid": "cluster-b803a82a-ccb3-4be2-ac8e-e6c3393c417a",
+          "hm_shard_enabled": false,
+          "password": "<sensitive>",
+          "port": 443
+        }
+      ],
+      "error_resync_interval": 300,
+      "send_interval": 15,
+      "dns_configs": [
+        {
+          "domain_name": "gslb.local"
+        }
+      ],
+      "leader_cluster_uuid": "cluster-b803a82a-ccb3-4be2-ac8e-e6c3393c417a",
+      "async_interval": 0,
+      "clear_on_max_retries": 20,
+      "name": "Default"
+    }
+  ]
+}
