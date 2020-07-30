@@ -57,10 +57,6 @@
        label: "{{ item.uuid }}"
       when: network is defined
 
-
-    # - debug:
-    #     msg: "/api/network/{{ listNetworkUuid.0 }}"
-
     - name: Create Avi IPAM
       avi_ipamdnsproviderprofile:
         avi_credentials: "{{ avi_credentials }}"

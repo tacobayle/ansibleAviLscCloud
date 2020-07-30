@@ -54,12 +54,16 @@ avi@ansible:~/ansible/aviLscCloud$
 - Configure health monitor
 - Configure Pool with associated health monitor
 - http/https VS (with Ipam and DNS)
-7. Configure GSLB (Infra) and geo profile
+7. Configure GSLB (Infra) and geo profile (geo profile is disabled due to resources limit)
 8. Configure GSLB Service
 
 
 ## Run the playbook:
 ansible-playbook -i hosts main.yml
 
-## Improvement:
-BGP branch allows a BGP use case demo
+## Improvements:
+- symplify the vs params (retrieve IPAM, DNS values automatically)
+
+
+## Branches:
+- BGP branch allows a BGP use case demo

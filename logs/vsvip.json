@@ -1,0 +1,162 @@
+{
+  "count": 4,
+  "results": [
+    {
+      "east_west_placement": false,
+      "_last_modified": "1595592478041628",
+      "url": "https://192.168.142.135/api/vsvip/vsvip-ab354979-7ace-463b-a3bb-393c3f5aea7a",
+      "tenant_ref": "https://192.168.142.135/api/tenant/admin",
+      "name": "vsvip-uc5lpB",
+      "cloud_ref": "https://192.168.142.135/api/cloud/cloud-e0b4294d-1985-4a04-960b-7c660bbdd0ff",
+      "vip": [
+        {
+          "vip_id": "1",
+          "avi_allocated_fip": false,
+          "auto_allocate_ip": false,
+          "enabled": true,
+          "auto_allocate_floating_ip": false,
+          "avi_allocated_vip": false,
+          "auto_allocate_ip_type": "V4_ONLY",
+          "ip_address": {
+            "type": "V4",
+            "addr": "10.1.2.50"
+          }
+        }
+      ],
+      "vrf_context_ref": "https://192.168.142.135/api/vrfcontext/vrfcontext-7ca334bc-74d0-4c74-b972-87345a9623b6",
+      "uuid": "vsvip-ab354979-7ace-463b-a3bb-393c3f5aea7a"
+    },
+    {
+      "east_west_placement": false,
+      "_last_modified": "1595592486769956",
+      "url": "https://192.168.142.135/api/vsvip/vsvip-394b30b7-145c-48bc-97f8-9f57fec91834",
+      "dns_info": [
+        {
+          "num_records_in_response": 1,
+          "type": "DNS_RECORD_A",
+          "fqdn": "app2.lsc.avidemo.fr",
+          "algorithm": "DNS_RECORD_RESPONSE_CONSISTENT_HASH",
+          "ttl": 100
+        }
+      ],
+      "tenant_ref": "https://192.168.142.135/api/tenant/admin",
+      "name": "vsvip-kEYGdy",
+      "cloud_ref": "https://192.168.142.135/api/cloud/cloud-e0b4294d-1985-4a04-960b-7c660bbdd0ff",
+      "vip": [
+        {
+          "vip_id": "0",
+          "avi_allocated_fip": false,
+          "auto_allocate_ip": true,
+          "enabled": true,
+          "ipam_network_subnet": {
+            "subnet": {
+              "mask": 24,
+              "ip_addr": {
+                "type": "V4",
+                "addr": "10.1.2.0"
+              }
+            },
+            "network_ref": "https://192.168.142.135/api/network/network-782954c4-c866-42f9-bd16-0fd608172e15"
+          },
+          "auto_allocate_floating_ip": false,
+          "avi_allocated_vip": false,
+          "auto_allocate_ip_type": "V4_ONLY",
+          "ip_address": {
+            "type": "V4",
+            "addr": "10.1.2.51"
+          }
+        }
+      ],
+      "vrf_context_ref": "https://192.168.142.135/api/vrfcontext/vrfcontext-7ca334bc-74d0-4c74-b972-87345a9623b6",
+      "uuid": "vsvip-394b30b7-145c-48bc-97f8-9f57fec91834"
+    },
+    {
+      "east_west_placement": false,
+      "_last_modified": "1595592489059290",
+      "url": "https://192.168.142.135/api/vsvip/vsvip-2de3dc42-e625-466f-9074-f871c718e09c",
+      "dns_info": [
+        {
+          "num_records_in_response": 1,
+          "type": "DNS_RECORD_A",
+          "fqdn": "app3.lsc.avidemo.fr",
+          "algorithm": "DNS_RECORD_RESPONSE_CONSISTENT_HASH",
+          "ttl": 100
+        }
+      ],
+      "tenant_ref": "https://192.168.142.135/api/tenant/admin",
+      "name": "vsvip-PPuU1d",
+      "cloud_ref": "https://192.168.142.135/api/cloud/cloud-e0b4294d-1985-4a04-960b-7c660bbdd0ff",
+      "vip": [
+        {
+          "vip_id": "0",
+          "avi_allocated_fip": false,
+          "auto_allocate_ip": true,
+          "enabled": true,
+          "ipam_network_subnet": {
+            "subnet": {
+              "mask": 24,
+              "ip_addr": {
+                "type": "V4",
+                "addr": "10.1.2.0"
+              }
+            },
+            "network_ref": "https://192.168.142.135/api/network/network-782954c4-c866-42f9-bd16-0fd608172e15"
+          },
+          "auto_allocate_floating_ip": false,
+          "avi_allocated_vip": false,
+          "auto_allocate_ip_type": "V4_ONLY",
+          "ip_address": {
+            "type": "V4",
+            "addr": "10.1.2.52"
+          }
+        }
+      ],
+      "vrf_context_ref": "https://192.168.142.135/api/vrfcontext/vrfcontext-7ca334bc-74d0-4c74-b972-87345a9623b6",
+      "uuid": "vsvip-2de3dc42-e625-466f-9074-f871c718e09c"
+    },
+    {
+      "east_west_placement": false,
+      "_last_modified": "1596030882181414",
+      "url": "https://192.168.142.135/api/vsvip/vsvip-401a2011-f5ba-4368-b2dd-7946d02ff74d",
+      "dns_info": [
+        {
+          "num_records_in_response": 1,
+          "type": "DNS_RECORD_A",
+          "fqdn": "ansible-app1.lsc.avidemo.fr",
+          "algorithm": "DNS_RECORD_RESPONSE_CONSISTENT_HASH",
+          "ttl": 100
+        }
+      ],
+      "tenant_ref": "https://192.168.142.135/api/tenant/admin",
+      "name": "vsvip-BGAxE5",
+      "cloud_ref": "https://192.168.142.135/api/cloud/cloud-e0b4294d-1985-4a04-960b-7c660bbdd0ff",
+      "vip": [
+        {
+          "vip_id": "0",
+          "avi_allocated_fip": false,
+          "auto_allocate_ip": true,
+          "enabled": true,
+          "ipam_network_subnet": {
+            "subnet": {
+              "mask": 24,
+              "ip_addr": {
+                "type": "V4",
+                "addr": "10.1.2.0"
+              }
+            },
+            "network_ref": "https://192.168.142.135/api/network/network-782954c4-c866-42f9-bd16-0fd608172e15"
+          },
+          "auto_allocate_floating_ip": false,
+          "avi_allocated_vip": false,
+          "auto_allocate_ip_type": "V4_ONLY",
+          "ip_address": {
+            "type": "V4",
+            "addr": "10.1.2.53"
+          }
+        }
+      ],
+      "vrf_context_ref": "https://192.168.142.135/api/vrfcontext/vrfcontext-7ca334bc-74d0-4c74-b972-87345a9623b6",
+      "uuid": "vsvip-401a2011-f5ba-4368-b2dd-7946d02ff74d"
+    }
+  ]
+}

@@ -80,24 +80,6 @@
 # nested loop needs to be used for httt_response_code
 # one task needs to be define per health monitor type
 
-    # - name: Create pool
-    #   avi_pool:
-    #     avi_credentials: "{{ avi_credentials }}"
-    #     api_version: "{{ avi_credentials.api_version }}"
-    #     avi_api_update_method: patch
-    #     avi_api_patch_op: add
-    #     name: "{{ item.0.name }}"
-    #     lb_algorithm: "{{ item.0.lb_algorithm }}"
-    #     health_monitor_refs:
-    #       - "/api/healthmonitor?name={{ item.0.health_monitor_refs }}"
-    #     servers:
-    #       - ip:
-    #            addr: "{{ item.1.ipaddr }}"
-    #            type: "{{ item.1.iptype }}"
-    #   with_subelements:
-    #     - "{{ avi_pool }}"
-    #     - servers
-
     - name: Create pool
       avi_pool:
         avi_credentials: "{{ avi_credentials }}"
