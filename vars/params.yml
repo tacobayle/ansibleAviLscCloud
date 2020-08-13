@@ -1,4 +1,27 @@
 ---
+
+avi_systemconfiguration:
+  global_tenant_config:
+    se_in_provider_context: true
+    tenant_access_to_provider_se: true
+    tenant_vrf: true
+  welcome_workflow_complete: true
+  ntp_configuration:
+    ntp_servers:
+      - server:
+          type: V4
+          addr: 192.168.10.3
+  dns_configuration:
+    search_domain: ''
+    server_list:
+      - type: V4
+        addr: 8.8.8.8
+      - type: V4
+        addr: 4.4.4.4
+  email_configuration:
+    from_email: test@avicontroller.net
+    smtp_type: SMTP_LOCAL_HOST
+
 cloudconnectoruser:
   name: avi
   private_key: /home/avi/.ssh/id_rsa
@@ -83,7 +106,7 @@ avi_applicationprofile:
   - name: appProfileNic
 
 avi_healthmonitor:
-  - name: hm1
+  - name: &hm0 hm1
     receive_timeout: 1
     failed_checks: 2
     send_interval: 1
@@ -114,9 +137,9 @@ avi_healthmonitor:
 #         iptype: 'V4'
 
 avi_pool:
-  - name: pool1
+  - name: &pool0 pool1
     lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
-    health_monitor_refs: hm1
+    health_monitor_refs: *hm0
     servers:
       - ip:
           addr: 172.16.3.253
@@ -124,9 +147,9 @@ avi_pool:
       - ip:
           addr: 172.16.3.254
           type: 'V4'
-  - name: pool2
+  - name: &pool1 pool2
     lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
-    health_monitor_refs: hm1
+    health_monitor_refs: *hm0
     servers:
       - ip:
           addr: 172.16.3.251
@@ -135,42 +158,58 @@ avi_pool:
           addr: 172.16.3.252
           type: 'V4'
 
-virtualservice:
+avi_virtualservice:
   dns:
-    - name: app1-dns
+    - name: &vs0 app1-dns
       port: 53
-      vip: 10.1.2.50
+      #vip: 10.1.2.50
       enable_rhi: false
       application_profile_ref: System-DNS
       network_profile_ref: System-UDP-Per-Pkt
   http:
-    - name: &vs0 app2
+    - name: &vs1 app2
       # port: 80
       services:
         - port: 80
           enable_ssl: false
         - port: 443
           enable_ssl: true
-      pool_ref: pool1
+      pool_ref: *pool0
       enable_rhi: false
-      network_ref: net-avi
-      mask: 24
-      type: V4
-      addr: 10.1.2.0
-      # fqdn: vs2.demoavi.local
-    - name: &vs1 app3
+      # network_ref: net-avi
+      # mask: 24
+      # type: V4
+      # addr: 10.1.2.0
+      # # fqdn: vs2.demoavi.local
+    - name: &vs2 app3
       # port: 80
       services:
         - port: 443
           enable_ssl: true
-      pool_ref: pool2
+      pool_ref: *pool1
       enable_rhi: false
-      network_ref: net-avi
-      mask: 24
-      type: V4
-      addr: 10.1.2.0
+      # network_ref: net-avi
+      # mask: 24
+      # type: V4
+      # addr: 10.1.2.0
       # fqdn: vs3.demoavi.local
 
+# avi_vsvip:
+#   - name: *vs0
+#     network_ref: "{{ networkName }}"
+#     mask: "{{ networkMask }}"
+#     type: "{{ networkType }}"
+#     addr: "{{ networkAddress }}"
+#   - name: *vs1
+#     network_ref: "{{ networkName }}"
+#     mask: "{{ networkMask }}"
+#     type: "{{ networkType }}"
+#     addr: "{{ networkAddress }}"
+#   - name: *vs2
+#     network_ref: "{{ networkName }}"
+#     mask: "{{ networkMask }}"
+#     type: "{{ networkType }}"
+#     addr: "{{ networkAddress }}"
 
 avi_gslb:
   sites:
@@ -202,14 +241,14 @@ avi_gslbgeodbprofile:
           filename: AviGeoDb.txt.gz
 
 avi_gslbservice:
-  - name: *vs0
+  - name: *vs1
     groups:
     - priority: 10
       members:
       - ratio: 1
         ip:
-          type: "{{ OutputVsHttp.results.0.obj.vip.0.ip_address.type }}"
-          addr: "{{ OutputVsHttp.results.0.obj.vip.0.ip_address.addr }}"
+          type: "{{ OutputVsHttpVip.results.0.obj.vip.0.ip_address.type }}"
+          addr: "{{ OutputVsHttpVip.results.0.obj.vip.0.ip_address.addr }}"
         enabled: true
         vs_uuid: "{{ OutputVsHttp.results.0.obj.uuid }}"
         cluster_uuid: "{{ statusCluster.obj.uuid }}"
@@ -221,16 +260,14 @@ avi_gslbservice:
     min_members: 0
     health_monitor_scope: GSLB_SERVICE_HEALTH_MONITOR_ALL_MEMBERS
     pool_algorithm: GSLB_SERVICE_ALGORITHM_GEO
-  - name: *vs1
-    # domain_names:
-    # - toto
+  - name: *vs2
     groups:
     - priority: 10
       members:
       - ratio: 1
         ip:
-          type: "{{ OutputVsHttp.results.1.obj.vip.0.ip_address.type }}"
-          addr: "{{ OutputVsHttp.results.1.obj.vip.0.ip_address.addr }}"
+          type: "{{ OutputVsHttpVip.results.1.obj.vip.0.ip_address.type }}"
+          addr: "{{ OutputVsHttpVip.results.1.obj.vip.0.ip_address.addr }}"
         enabled: true
         vs_uuid: "{{ OutputVsHttp.results.1.obj.uuid }}"
         cluster_uuid: "{{ statusCluster.obj.uuid }}"
@@ -242,19 +279,3 @@ avi_gslbservice:
     min_members: 0
     health_monitor_scope: GSLB_SERVICE_HEALTH_MONITOR_ALL_MEMBERS
     pool_algorithm: GSLB_SERVICE_ALGORITHM_GEO
-    # - name: tata
-    #   # domain_names:
-    #   # - toto
-
-
-  # https:
-  #   - name: vs3-https
-  #     services:
-  #       - port: 443
-  #         enable_ssl: true
-  #     #enable_ssl: true
-  #     #port: 443
-  #     pool_ref: pool2
-  #     fqdn: vs3.demoavi.local
-  #     ssl_profile_ref: System-Standard
-  #     ssl_key_and_certificate_refs: System-Default-Cert

@@ -18,7 +18,8 @@ Playbook(s) has/have been tested against:
 ### Avi version
 
 ```
-Avi 18.2.9
+Avi 20.1.1
+avisdk 18.2.9
 ```
 
 ### Ansible version
@@ -44,12 +45,14 @@ avi@ansible:~/ansible/aviLscCloud$
 
 
 ## Use the ansible playbook to:
-1. Configure a cloud user
-2. Configure the SEs with ssh key
-3. Configure Network, Ipam and DNS profiles
-4. Configure a LSC cloud with all SE from the ansible inventory (group 'SE'), with Ipam and DNS profiles
-5. Configure Application Profile
-6. Configure VS(s):
+1. Create a security passphrase for the backup
+2. Configure glocal config.
+3. Configure a cloud user
+4. Configure the SEs with ssh key
+5. Configure Network, Ipam and DNS profiles
+6. Configure a LSC cloud with all SE from the ansible inventory (group 'SE'), with Ipam and DNS profiles
+7. Configure Application Profile
+8. Configure VS(s):
 - DNS VS
 - Configure health monitor
 - Configure Pool with associated health monitor
