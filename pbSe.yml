@@ -6,7 +6,7 @@
   become_method: sudo
 
   vars_files:
-    - "vars/creds.json"
+    # - "vars/creds.json"
     - "vars/params.yml"
 
   tasks:

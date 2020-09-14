@@ -1,5 +1,4 @@
 ---
-
 avi_systemconfiguration:
   global_tenant_config:
     se_in_provider_context: true
@@ -19,12 +18,12 @@ avi_systemconfiguration:
       - type: V4
         addr: 4.4.4.4
   email_configuration:
-    from_email: test@avicontroller.net
+    from_email: nicolas.bayle.it@@gmail.com
     smtp_type: SMTP_LOCAL_HOST
 
 cloudconnectoruser:
   name: avi
-  private_key: /home/avi/.ssh/id_rsa
+  private_key: ~/.ssh/id_rsa
 
 dns:
   name: dns-avi

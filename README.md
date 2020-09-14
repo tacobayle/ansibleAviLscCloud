@@ -62,7 +62,7 @@ avi@ansible:~/ansible/aviLscCloud$
 
 
 ## Run the playbook:
-ansible-playbook -i hosts main.yml
+ansible-playbook -i hosts local.yml --extra-vars @pathto/creds.json
 
 ## Improvements:
 - symplify the vs params (retrieve IPAM, DNS values automatically)

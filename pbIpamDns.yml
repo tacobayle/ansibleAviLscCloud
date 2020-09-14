@@ -6,7 +6,7 @@
     listNetworkUuid: []
 
   vars_files:
-    - "vars/creds.json"
+    # - "vars/creds.json"
     - "vars/params.yml"
 
   roles:
@@ -16,8 +16,8 @@
 
     - name: Create Avi DNS provider setting
       avi_ipamdnsproviderprofile:
-        avi_credentials: "{{ avi_credentials }}"
-        api_version: "{{ avi_credentials.api_version }}"
+        avi_credentials: "{{ avi_credentials | default(omit) }}"
+        api_context: "{{ avi_api_context | default(omit) }}"
         internal_profile:
           dns_service_domain:
           - domain_name: "{{ dns.domain.name }}"
@@ -31,8 +31,8 @@
 
     - name: Create Networks
       avi_network:
-        avi_credentials: "{{ avi_credentials }}"
-        api_version: "{{ avi_credentials.api_version }}"
+        avi_credentials: "{{ avi_credentials | default(omit) }}"
+        api_context: "{{ avi_api_context | default(omit) }}"
         name: "{{ network.name }}"
         configured_subnets: "{{ network.subnet }}"
         dhcp_enabled: "{{ network.dhcp_enabled }}"
@@ -41,8 +41,8 @@
 
     - name: get Networks to retrieve Uuid
       avi_api_session:
-        avi_credentials: "{{ avi_credentials }}"
-        api_version: "{{ avi_credentials.api_version }}"
+        avi_credentials: "{{ avi_credentials | default(omit) }}"
+        api_context: "{{ avi_api_context | default(omit) }}"
         http_method: get
         timeout: 300
         path: network
@@ -59,8 +59,8 @@
 
     - name: Create Avi IPAM
       avi_ipamdnsproviderprofile:
-        avi_credentials: "{{ avi_credentials }}"
-        api_version: "{{ avi_credentials.api_version }}"
+        avi_credentials: "{{ avi_credentials | default(omit) }}"
+        api_context: "{{ avi_api_context | default(omit) }}"
         internal_profile:
           usable_network_refs:
             - "/api/network/{{ listNetworkUuid.0 }}"
