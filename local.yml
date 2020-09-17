@@ -1,4 +1,7 @@
 ---
+- import_playbook: pbVyos.yml
+- import_playbook: pbClientConfigureIp.yml
+- import_playbook: pbServerDocker.yml
 - import_playbook: pbCloudUser.yml
 - import_playbook: pbSe.yml
 - import_playbook: pbSeGroup.yml
@@ -6,6 +9,3 @@
 - import_playbook: pbCloud.yml
 - import_playbook: pbVrf.yml
 - import_playbook: pbVs.yml
-- import_playbook: pbVyos.yml
-- import_playbook: pbClientConfigureIp.yml
-- import_playbook: pbServerDocker.yml

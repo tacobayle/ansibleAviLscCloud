@@ -1,7 +1,7 @@
 ---
 cloudconnectoruser:
   name: avi
-  private_key: /home/avi/.ssh/id_rsa
+  private_key: ~/.ssh/id_rsa
 
 dns:
   name: dns-avi
@@ -110,7 +110,7 @@ avi_pool:
           addr: 172.16.3.252
           type: 'V4'
 
-virtualservice:
+avi_virtualservice:
   dns:
     - name: vs-dns
       port: 53

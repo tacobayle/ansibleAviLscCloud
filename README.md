@@ -99,17 +99,19 @@ all:
 8. Configure client and server
 
 ## Run the playbook:
-ansible-playbook -i hosts main.yml
+ansible-playbook -i hosts local.yml --extra-vars @pathto/creds.json
 try from the client:
 ```
-while true ; do curl 5.5.5.51 ; sleep 0.5 ; done
+while true ; do curl 5.5.5.52 ; sleep 0.5 ; done
 while true ; do curl --interface 10.1.4.2 5.5.5.51 ; sleep 0.5 ; done
 while true ; do curl --interface 10.1.4.3 5.5.5.51 ; sleep 0.5 ; done
 while true ; do curl --interface 10.1.4.4 5.5.5.51 ; sleep 0.5 ; done
 ```
 check the BGP routes:
 ```
-show ip bgp
+
+
+
 show ip route
 ```
 stop the docker to make sure BGP will update (RHI feature):
